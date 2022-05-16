@@ -17,8 +17,8 @@ member_count(respondent_level_bitmaps, roaring_client)
 \tabular{rrrrr}{
 member_count \tab root_key\cr
 <int> \tab <chr>\cr
-  1   \tab          1 redis:bitops:3gfbiagag29bdeh199hab4482adgcbd94h97847f\cr
-  2   \tab       2 redis:bitops:0hb9f0ciii1cbcb7che274b36792a82h5gef1agf\cr
+ 1 \tab redis:bitops:3gfbiagag29bdeh199hab4482adgcbd94h97847f\cr
+ 2 \tab redis:bitops:0hb9f0ciii1cbcb7che274b36792a82h5gef1agf\cr
 }
 }
 \description{
