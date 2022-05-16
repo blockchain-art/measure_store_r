@@ -1,0 +1,99 @@
+install.packages('jsonlite')
+install.packages('magrittr')
+install.packages('dplyr')
+install.packages("RcppMsgPack")
+install.packages('tidyverse')
+
+library('magrittr')
+library('dplyr')
+library('jsonlite')
+library('redux')
+library('RcppMsgPack')
+library('tidyverse')
+
+confl <- redis_config(url='redis://127.0.0.1:6380/1')
+roaring <- redux::hiredis(confl)
+s <- redux::hiredis()
+p <- redux::hiredis()
+
+transform <- function(x) {
+  #data <- msgpackUnpack(x$value)
+  data <- msgpack_unpack(x$value, simplify=T)
+  #data <- fromJSON(x$value)
+  print(data)
+  #data
+  #result <- to_respondent_level_data(data)
+  #res <- to_respondent_level_data(data)
+  #print(as.list(as.data.frame(res))
+  #result <- msgpack_pack(as.list(as.data.frame(to_respondent_level_data(data))))
+  data <- to_respondent_level_data(data)
+ # res <- split(data, 1:nrow(data))
+  #res <- msgpack_pack(res)
+ # res
+  res <- apply(data,1,as.list)
+  print(res)
+  #res <- lapply( split(data,seq_along(data[,1])), as.list)
+  res <- msgpack_pack(res)
+  #result <- toJSON(to_respondent_level_data(data))
+  print(res)
+  tennis_racket(res)
+}
+
+tennis_racket <- function(x) {
+  p$PUBLISH("need_to_divide", x)
+}
+
+# member counts
+to_respondent_level_data <- function(bitmaps) {
+  #bitmaps_df <- as.data.frame(bitmaps)
+  bitmaps_df <- as.data.frame(bind_rows(bitmaps))
+  print(bitmaps_df)
+  duptimes <- c()
+  respondents <- c()
+
+  for (column_number in 1:nrow(bitmaps_df)) {
+    key <- bitmaps_df[column_number, "root_key"]
+    indexes <- roaring$command(c("R.GETINTARRAY", key))
+
+    duptimes <- append(duptimes, length(indexes))
+    respondents <- append(respondents, as.integer(indexes))
+  }
+
+  idx <- rep(1:nrow(bitmaps_df), duptimes)
+
+  dupdf <- bitmaps_df[idx,]
+  dupdf$respondent_id <- respondents
+
+  member_counts <- dupdf %>%
+    group_by(respondent_id) %>%
+    summarise(member_count = n()) %>%
+    group_by(member_count) %>%
+    summarize(indexes = paste(sort(unique(respondent_id)),collapse=", ")) %>%
+    mutate(root_key = to_bitmaps(indexes, roaring)) %>%
+    select(-indexes)
+
+  print(member_counts)
+  return(member_counts)
+}
+
+
+to_bitmaps <- function(indexes, redis) {
+  print(indexes)
+  storage_keys <- c()
+
+  for (i in indexes) {
+    key <- i
+    root_key <- "response_id|msff498fe3|cdsff498fe3|sf7366f35"
+
+    formatted_root_key <- paste(root_key, key, sep="|")
+    redis$command(c("R.APPENDINTARRAY", formatted_root_key, as.numeric(strsplit(key,split=", ",fixed=TRUE)[[1]])))
+
+    storage_keys <- append(storage_keys, formatted_root_key)
+  }
+
+  return(storage_keys)
+}
+
+msg <- s$subscribe("hello",
+                   transform = transform,
+                   n = 1)
