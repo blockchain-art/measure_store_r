@@ -2,6 +2,7 @@
 
 export(convert_bitmaps_to_counts)
 export(member_count)
+export(redis_roaring_client)
 export(to_respondent_level_data)
 export(unique_key)
 export(write_indexes_to_redis)
