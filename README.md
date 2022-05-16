@@ -26,5 +26,6 @@ Or to get more info about a specific method:
 help("convert_bitmaps_to_counts", package="MeasureStoreR")
 ```
 Some examples of the help pages:
-<img width="773" alt="help_page_1" src="https://user-images.githubusercontent.com/79599315/168616545-c1e7c7c5-9f60-456c-96f2-e2edee94823e.png">
-<img width="775" alt="Screenshot 2022-05-16 at 15 30 56" src="https://user-images.githubusercontent.com/79599315/168616722-94dbdde0-7422-4e30-a909-0a0a0baaa3ab.png">
+
+<img width="770" alt="Screenshot 2022-05-16 at 15 32 29" src="https://user-images.githubusercontent.com/79599315/168617065-359d83fb-4b7e-473e-a928-58a3fc8e9b04.png">
+<img width="771" alt="Screenshot 2022-05-16 at 15 31 56" src="https://user-images.githubusercontent.com/79599315/168617125-6dd17fd5-8cd0-4872-95aa-7478cc2dfa2f.png">
