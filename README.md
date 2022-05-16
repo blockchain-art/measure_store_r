@@ -16,7 +16,7 @@ print(unique_key())
 
 
 ## Help
-To view the help pages of `MeasureStoreR` library:
+To view the help pages:
 ```
 help(package="MeasureStoreR")
 ```
