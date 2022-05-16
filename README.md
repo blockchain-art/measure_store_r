@@ -5,6 +5,7 @@ Add the following to the top of your R file
 ```
 library(devtools)
 install_github('blockchain-art/measure_store_r')
+library(MeasureStoreR)
 ```
 
 ## Usage example
