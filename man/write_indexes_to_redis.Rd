@@ -9,9 +9,8 @@ write_indexes_to_redis(indexes, roaring_client)
 \arguments{
 \item{indexes}{character variable e.g.: \code{c("1, 3, 4", "2")}}
 
-\item{roaring_client}{RedisRoaring client e.g.: \cr
-\code{confl <- redis_config(url='redis://127.0.0.1:6380/1')} \cr
-\code{roaring_client <- redux::hiredis(confl)}}
+\item{roaring_client}{a Redis client e.g.:\cr
+\code{roaring_client <- redis_client('redis://127.0.0.1:6380/0')}}
 }
 \value{
 "redis:bitops:8dd1b989996gg8523633c06h7d4026067fc1cfc6" "redis:bitops:06d01cfc2gijj2da3hjdc36271ga6g15bcbc0773"

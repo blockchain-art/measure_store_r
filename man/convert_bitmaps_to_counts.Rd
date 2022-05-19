@@ -7,11 +7,10 @@
 convert_bitmaps_to_counts(bitmaps, roaring_client)
 }
 \arguments{
-\item{bitmaps}{a Ruby array of hashes}
+\item{bitmaps}{a bitmap dataframe}
 
-\item{roaring_client}{RedisRoaring client e.g.: \cr
-\code{confl <- redis_config(url='redis://127.0.0.1:6380/1')} \cr
-\code{roaring_client <- redux::hiredis(confl)}}
+\item{roaring_client}{a Redis client e.g.:\cr
+\code{roaring_client <- redis_client('redis://127.0.0.1:6380/0')}}
 }
 \value{
 \tabular{rrrrr}{
