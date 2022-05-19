@@ -30,7 +30,7 @@ write_indexes_to_redis <- function(indexes, roaring_client) {
 
 #' Transforms bitmaps to respondent level data
 #' @export
-#' @param bitmaps a JSON serialized Ruby array of bitmaps
+#' @param bitmaps a bitmap dataframe
 #' @param roaring_client RedisRoaring client e.g.: \cr
 #' \code{confl <- redis_config(url='redis://127.0.0.1:6380/1')} \cr
 #' \code{roaring_client <- redux::hiredis(confl)}

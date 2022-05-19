@@ -7,7 +7,7 @@
 to_respondent_level_data(bitmaps, roaring_client)
 }
 \arguments{
-\item{bitmaps}{a JSON serialized Ruby array of bitmaps}
+\item{bitmaps}{a bitmap dataframe}
 
 \item{roaring_client}{RedisRoaring client e.g.: \cr
 \code{confl <- redis_config(url='redis://127.0.0.1:6380/1')} \cr
