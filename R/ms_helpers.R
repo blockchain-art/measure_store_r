@@ -120,11 +120,11 @@ convert_bitmaps_to_counts <- function(bitmaps, roaring_client) {
 }
 
 
-#' Create a RedisRoaring client
+#' Create a Redis client
 #' @export
 #' @param url example: \code{'redis://127.0.0.1:6380/1'}
-#' @return a client for connecting to RedisRoaring
-redis_roaring_client <- function(url) {
+#' @return a client for connecting to Redis
+redis_client <- function(url) {
   confl <- redis_config(url=url)
   client <- redux::hiredis(confl)
 
