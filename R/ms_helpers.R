@@ -30,20 +30,20 @@ write_indexes_to_redis <- function(indexes, roaring_client) {
 
 #' Transforms bitmaps to respondent level data
 #' @export
-#' @param bitmaps a Ruby array of hashes
+#' @param bitmaps a JSON serialized Ruby array of bitmaps
 #' @param roaring_client RedisRoaring client e.g.: \cr
 #' \code{confl <- redis_config(url='redis://127.0.0.1:6380/1')} \cr
 #' \code{roaring_client <- redux::hiredis(confl)}
 #' @return \tabular{rrrrr}{
-#'  brand \tab usage             \tab                                       root_key  \tab respondent_id\cr
-#'  Pepsi \tab    1 response_id|ms8b129767|cds1c52f958|s9644a47e|cdsd0eb5e70|i1 \tab            2\cr
-#'  Fanta \tab    1 response_id|ms8b129767|cds1c52f958|sa1a4c184|cdsd0eb5e70|i1 \tab           3\cr
-#'  Fanta \tab    1 response_id|ms8b129767|cds1c52f958|sa1a4c184|cdsd0eb5e70|i1 \tab            4\cr
-#'  Coke  \tab   1 response_id|ms8b129767|cds1c52f958|s50bf8369|cdsd0eb5e70|i1   \tab          1\cr
-#'  Coke  \tab   1 response_id|ms8b129767|cds1c52f958|s50bf8369|cdsd0eb5e70|i1  \tab           2\cr
+#'  brand \tab usage\tab               respondent_id\cr
+#'  Pepsi \tab    1 \tab               2\cr
+#'  Fanta \tab    1 \tab               3\cr
+#'  Fanta \tab    1 \tab               4\cr
+#'  Coke  \tab    1 \tab               1\cr
+#'  Coke  \tab    1 \tab               2\cr
 #' }
 to_respondent_level_data <- function(bitmaps, roaring_client) {
-  bitmaps_df <- as.data.frame(bind_rows(bitmaps))
+  bitmaps_df <- as.data.frame(bitmaps)
   duptimes <- c()
   respondents <- c()
 
@@ -59,6 +59,9 @@ to_respondent_level_data <- function(bitmaps, roaring_client) {
 
   dupdf <- bitmaps_df[idx,]
   dupdf$respondent_id <- respondents
+
+  dupdf <- dupdf %>%
+    select(-root_key)
 
   return(dupdf)
 }
