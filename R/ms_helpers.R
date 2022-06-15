@@ -13,21 +13,21 @@ unique_key <- function() {
 #' @param roaring_client a Redis client e.g.:\cr
 #' \code{roaring_client <- redis_client('redis://127.0.0.1:6380/0')}
 #' @return "redis:bitops:8dd1b989996gg8523633c06h7d4026067fc1cfc6" "redis:bitops:06d01cfc2gijj2da3hjdc36271ga6g15bcbc0773"
-write_indexes_to_redis <- function(indexes, roaring_client) {
-  storage_keys <- c()
+write_respondent_indexes <- function(indexes, roaring_client) {
+  root_keys <- c()
 
   for (i in indexes) {
     key <- i
     dest_key <- unique_key()
 
     roaring_client$command(c("R.APPENDINTARRAY", dest_key, as.numeric(strsplit(key,split=", ",fixed=TRUE)[[1]])))
-    storage_keys <- append(storage_keys, dest_key)
+    root_keys <- append(root_keys, dest_key)
   }
 
-  return(storage_keys)
+  return(root_keys)
 }
 
-#' Transforms bitmaps to respondent level data
+#' Expand bitmaps to respondent level data
 #' @export
 #' @param bitmaps a bitmap dataframe
 #' @param roaring_client a Redis client e.g.:\cr
@@ -59,7 +59,6 @@ to_respondent_level_data <- function(bitmaps, roaring_client) {
   return(respondent_level_bitmaps)
 }
 
-
 #' Generates member counts
 #' @export
 #' @param respondent_level_bitmaps a respondent level bitmap dataframe
@@ -77,7 +76,7 @@ member_count <- function(respondent_level_bitmaps, roaring_client) {
     summarise(member_count = n()) %>%
     group_by(member_count) %>%
     summarize(indexes = paste(sort(unique(respondent_id)),collapse=", ")) %>%
-    mutate(root_key = write_indexes_to_redis(indexes, roaring_client)) %>%
+    mutate(root_key = write_respondent_indexes(indexes, roaring_client)) %>%
     select(-indexes)
 
   return(member_counts)
@@ -94,7 +93,7 @@ member_count <- function(respondent_level_bitmaps, roaring_client) {
 #' Fanta \tab    1 \tab    2\cr
 #' Coke  \tab   1  \tab    2\cr
 #' }
-convert_bitmaps_to_counts <- function(bitmaps, roaring_client) {
+generate_counts_for_bitmaps <- function(bitmaps, roaring_client) {
   bitmaps <- as.data.frame(bitmaps)
   results <- c()
 
@@ -111,7 +110,6 @@ convert_bitmaps_to_counts <- function(bitmaps, roaring_client) {
   return(df)
 }
 
-
 #' Create a Redis client
 #' @export
 #' @param url example: \code{'redis://127.0.0.1:6380/1'}
@@ -122,7 +120,6 @@ redis_client <- function(url) {
 
   return(client)
 }
-
 
 #' Retrieve respondent indexes for given root_keys
 #' @export
@@ -139,4 +136,3 @@ get_respondent_indexes <- function(root_keys, roaring_client) {
 
   return(respondent_indexes)
 }
-

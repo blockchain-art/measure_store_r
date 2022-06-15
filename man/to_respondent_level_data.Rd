@@ -2,7 +2,7 @@
 % Please edit documentation in R/ms_helpers.R
 \name{to_respondent_level_data}
 \alias{to_respondent_level_data}
-\title{Transforms bitmaps to respondent level data}
+\title{Expand bitmaps to respondent level data}
 \usage{
 to_respondent_level_data(bitmaps, roaring_client)
 }
@@ -23,5 +23,5 @@ to_respondent_level_data(bitmaps, roaring_client)
 }
 }
 \description{
-Transforms bitmaps to respondent level data
+Expand bitmaps to respondent level data
 }
